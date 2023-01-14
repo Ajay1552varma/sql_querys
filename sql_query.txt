@@ -1,0 +1,381 @@
+mysql> show databases;
++--------------------+
+| Database           |
++--------------------+
+| blog               |
+| information_schema |
+| mysql              |
+| performance_schema |
+| sys                |
++--------------------+
+5 rows in set (1.11 sec)
+
+mysql>
+mysql> use blog;
+Database changed
+mysql> show tables;
++----------------+
+| Tables_in_blog |
++----------------+
+| user           |
++----------------+
+1 row in set (0.52 sec)
+
+mysql> show user;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'user' at line 1
+mysql> desc user;
++---------+--------------+------+-----+---------+-------+
+| Field   | Type         | Null | Key | Default | Extra |
++---------+--------------+------+-----+---------+-------+
+| id      | int          | NO   | PRI | NULL    |       |
+| name    | varchar(100) | NO   |     | NULL    |       |
+| city    | varchar(50)  | YES  |     | NULL    |       |
+| country | varchar(50)  | YES  |     | NULL    |       |
++---------+--------------+------+-----+---------+-------+
+4 rows in set (0.25 sec)
+
+mysql> select * from user;
++----+--------+--------+---------+
+| id | name   | city   | country |
++----+--------+--------+---------+
+|  1 | Ajay   | india  | NULL    |
+|  2 | vivek  | india  | NULL    |
+|  3 | aanand | india  | NULL    |
+|  4 | aanand | india  | NULL    |
+|  5 | aanand | ind    | NULL    |
+|  6 | aana   | indi   | NULL    |
+|  7 | ravi   | kanpur | NULL    |
++----+--------+--------+---------+
+7 rows in set (0.30 sec)
+
+mysql> insert into country values(kanpur) where id=3;
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'where id=3' at line 1
+mysql> insert into user(country)values('kanpur');
+ERROR 1364 (HY000): Field 'id' doesn't have a default value
+mysql> alter table user rename to student;
+Query OK, 0 rows affected (1.45 sec)
+
+mysql> show tables;
++----------------+
+| Tables_in_blog |
++----------------+
+| student        |
++----------------+
+1 row in set (0.01 sec)
+
+mysql> update table student set country='kanpur' where name='aanand';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'table student set country='kanpur' where name='aanand'' at line 1
+mysql> update student set country='kanpur' where name='aanand';
+Query OK, 3 rows affected (0.27 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+mysql> select * from student;
++----+--------+--------+---------+
+| id | name   | city   | country |
++----+--------+--------+---------+
+|  1 | Ajay   | india  | NULL    |
+|  2 | vivek  | india  | NULL    |
+|  3 | aanand | india  | kanpur  |
+|  4 | aanand | india  | kanpur  |
+|  5 | aanand | ind    | kanpur  |
+|  6 | aana   | indi   | NULL    |
+|  7 | ravi   | kanpur | NULL    |
++----+--------+--------+---------+
+7 rows in set (0.00 sec)
+
+mysql> update student set country='lucknow' name='shubham' where name='aanand';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near 'name='shubham' where name='aanand'' at line 1
+mysql> update student set country='lucknow', name='shubham' where name='aanand';
+Query OK, 3 rows affected (0.17 sec)
+Rows matched: 3  Changed: 3  Warnings: 0
+
+mysql> select * from student;
++----+---------+--------+---------+
+| id | name    | city   | country |
++----+---------+--------+---------+
+|  1 | Ajay    | india  | NULL    |
+|  2 | vivek   | india  | NULL    |
+|  3 | shubham | india  | lucknow |
+|  4 | shubham | india  | lucknow |
+|  5 | shubham | ind    | lucknow |
+|  6 | aana    | indi   | NULL    |
+|  7 | ravi    | kanpur | NULL    |
++----+---------+--------+---------+
+7 rows in set (0.03 sec)
+
+mysql> update student set country='kanpur' where name='ajay',name='vivek';
+ERROR 1064 (42000): You have an error in your SQL syntax; check the manual that corresponds to your MySQL server version for the right syntax to use near ',name='vivek'' at line 1
+mysql> update student set country='kanpur' where name='ajay';
+Query OK, 1 row affected (0.10 sec)
+Rows matched: 1  Changed: 1  Warnings: 0
+
+mysql> select * from student;
++----+---------+--------+---------+
+| id | name    | city   | country |
++----+---------+--------+---------+
+|  1 | Ajay    | india  | kanpur  |
+|  2 | vivek   | india  | NULL    |
+|  3 | shubham | india  | lucknow |
+|  4 | shubham | india  | lucknow |
+|  5 | shubham | ind    | lucknow |
+|  6 | aana    | indi   | NULL    |
+|  7 | ravi    | kanpur | NULL    |
++----+---------+--------+---------+
+7 rows in set (0.00 sec)
+
+mysql> select name from student where country='lucknow';
++---------+
+| name    |
++---------+
+| shubham |
+| shubham |
+| shubham |
++---------+
+3 rows in set (0.00 sec)
+
+mysql> select * from student where country ='lucknow';
++----+---------+-------+---------+
+| id | name    | city  | country |
++----+---------+-------+---------+
+|  3 | shubham | india | lucknow |
+|  4 | shubham | india | lucknow |
+|  5 | shubham | ind   | lucknow |
++----+---------+-------+---------+
+3 rows in set (0.00 sec)
+
+mysql> select * from student;
++----+---------+--------+---------+
+| id | name    | city   | country |
++----+---------+--------+---------+
+|  1 | Ajay    | india  | kanpur  |
+|  2 | vivek   | india  | NULL    |
+|  3 | shubham | india  | lucknow |
+|  4 | shubham | india  | lucknow |
+|  5 | shubham | ind    | lucknow |
+|  6 | aana    | indi   | NULL    |
+|  7 | ravi    | kanpur | NULL    |
++----+---------+--------+---------+
+7 rows in set (0.00 sec)
+
+mysql> select * from student where id>=3 and id<=6;
++----+---------+-------+---------+
+| id | name    | city  | country |
++----+---------+-------+---------+
+|  3 | shubham | india | lucknow |
+|  4 | shubham | india | lucknow |
+|  5 | shubham | ind   | lucknow |
+|  6 | aana    | indi  | NULL    |
++----+---------+-------+---------+
+4 rows in set (0.01 sec)
+
+mysql> select * from student;
++----+---------+--------+---------+
+| id | name    | city   | country |
++----+---------+--------+---------+
+|  1 | Ajay    | india  | kanpur  |
+|  2 | vivek   | india  | NULL    |
+|  3 | shubham | india  | lucknow |
+|  4 | shubham | india  | lucknow |
+|  5 | shubham | ind    | lucknow |
+|  6 | aana    | indi   | NULL    |
+|  7 | ravi    | kanpur | NULL    |
++----+---------+--------+---------+
+7 rows in set (0.00 sec)
+
+mysql> select * from student limit 4;
++----+---------+-------+---------+
+| id | name    | city  | country |
++----+---------+-------+---------+
+|  1 | Ajay    | india | kanpur  |
+|  2 | vivek   | india | NULL    |
+|  3 | shubham | india | lucknow |
+|  4 | shubham | india | lucknow |
++----+---------+-------+---------+
+4 rows in set (0.00 sec)
+
+mysql> select*from student limit 2 offset 2;
++----+---------+-------+---------+
+| id | name    | city  | country |
++----+---------+-------+---------+
+|  3 | shubham | india | lucknow |
+|  4 | shubham | india | lucknow |
++----+---------+-------+---------+
+2 rows in set (0.00 sec)
+
+mysql> select * from student order by id desc;
++----+---------+--------+---------+
+| id | name    | city   | country |
++----+---------+--------+---------+
+|  7 | ravi    | kanpur | NULL    |
+|  6 | aana    | indi   | NULL    |
+|  5 | shubham | ind    | lucknow |
+|  4 | shubham | india  | lucknow |
+|  3 | shubham | india  | lucknow |
+|  2 | vivek   | india  | NULL    |
+|  1 | Ajay    | india  | kanpur  |
++----+---------+--------+---------+
+7 rows in set (0.00 sec)
+
+mysql> select * from student order by name desc;
++----+---------+--------+---------+
+| id | name    | city   | country |
++----+---------+--------+---------+
+|  2 | vivek   | india  | NULL    |
+|  3 | shubham | india  | lucknow |
+|  4 | shubham | india  | lucknow |
+|  5 | shubham | ind    | lucknow |
+|  7 | ravi    | kanpur | NULL    |
+|  1 | Ajay    | india  | kanpur  |
+|  6 | aana    | indi   | NULL    |
++----+---------+--------+---------+
+7 rows in set (0.02 sec)
+
+mysql> select * from student order by name;
++----+---------+--------+---------+
+| id | name    | city   | country |
++----+---------+--------+---------+
+|  6 | aana    | indi   | NULL    |
+|  1 | Ajay    | india  | kanpur  |
+|  7 | ravi    | kanpur | NULL    |
+|  3 | shubham | india  | lucknow |
+|  4 | shubham | india  | lucknow |
+|  5 | shubham | ind    | lucknow |
+|  2 | vivek   | india  | NULL    |
++----+---------+--------+---------+
+7 rows in set (0.00 sec)
+
+mysql> select * from student;
++----+---------+--------+---------+
+| id | name    | city   | country |
++----+---------+--------+---------+
+|  1 | Ajay    | india  | kanpur  |
+|  2 | vivek   | india  | NULL    |
+|  3 | shubham | india  | lucknow |
+|  4 | shubham | india  | lucknow |
+|  5 | shubham | ind    | lucknow |
+|  6 | aana    | indi   | NULL    |
+|  7 | ravi    | kanpur | NULL    |
++----+---------+--------+---------+
+7 rows in set (0.00 sec)
+
+mysql> select * from student order by id desc limit 2;
++----+------+--------+---------+
+| id | name | city   | country |
++----+------+--------+---------+
+|  7 | ravi | kanpur | NULL    |
+|  6 | aana | indi   | NULL    |
++----+------+--------+---------+
+2 rows in set (0.00 sec)
+
+mysql> select * from student;
++----+---------+--------+---------+
+| id | name    | city   | country |
++----+---------+--------+---------+
+|  1 | Ajay    | india  | kanpur  |
+|  2 | vivek   | india  | NULL    |
+|  3 | shubham | india  | lucknow |
+|  4 | shubham | india  | lucknow |
+|  5 | shubham | ind    | lucknow |
+|  6 | aana    | indi   | NULL    |
+|  7 | ravi    | kanpur | NULL    |
++----+---------+--------+---------+
+7 rows in set (0.00 sec)
+
+mysql> select * from student where name like '%a';
++----+------+------+---------+
+| id | name | city | country |
++----+------+------+---------+
+|  6 | aana | indi | NULL    |
++----+------+------+---------+
+1 row in set (0.06 sec)
+
+mysql> select * from student where name like '%A';
++----+------+------+---------+
+| id | name | city | country |
++----+------+------+---------+
+|  6 | aana | indi | NULL    |
++----+------+------+---------+
+1 row in set (0.00 sec)
+
+mysql> select * from student where name like 'a%';
++----+------+-------+---------+
+| id | name | city  | country |
++----+------+-------+---------+
+|  1 | Ajay | india | kanpur  |
+|  6 | aana | indi  | NULL    |
++----+------+-------+---------+
+2 rows in set (0.00 sec)
+
+mysql> select * from student where city like '_n%';
++----+---------+-------+---------+
+| id | name    | city  | country |
++----+---------+-------+---------+
+|  1 | Ajay    | india | kanpur  |
+|  2 | vivek   | india | NULL    |
+|  3 | shubham | india | lucknow |
+|  4 | shubham | india | lucknow |
+|  5 | shubham | ind   | lucknow |
+|  6 | aana    | indi  | NULL    |
++----+---------+-------+---------+
+6 rows in set (0.00 sec)
+
+mysql> select * from student;
++----+---------+--------+---------+
+| id | name    | city   | country |
++----+---------+--------+---------+
+|  1 | Ajay    | india  | kanpur  |
+|  2 | vivek   | india  | NULL    |
+|  3 | shubham | india  | lucknow |
+|  4 | shubham | india  | lucknow |
+|  5 | shubham | ind    | lucknow |
+|  6 | aana    | indi   | NULL    |
+|  7 | ravi    | kanpur | NULL    |
++----+---------+--------+---------+
+7 rows in set (0.00 sec)
+
+mysql> select sum(id) from student;
++---------+
+| sum(id) |
++---------+
+|      28 |
++---------+
+1 row in set (0.05 sec)
+
+mysql> select avg(id) from student;
++---------+
+| avg(id) |
++---------+
+|  4.0000 |
++---------+
+1 row in set (0.00 sec)
+
+mysql> select count(id) from student;
++-----------+
+| count(id) |
++-----------+
+|         7 |
++-----------+
+1 row in set (0.04 sec)
+
+
+
+
+Access tocken->  Rh6xn98SKfdLJzMXj57j
+
+mysql> select min(id) from student;
++---------+
+| min(id) |
++---------+
+|       1 |
++---------+
+1 row in set (0.02 sec)
+
+mysql> select name from student where id=(select min(id) from student);
++------+
+| name |
++------+
+| Ajay |
++------+
+
+
+
